@@ -132,3 +132,5 @@ output_gan/
 gan_training_checkpoints/
 imgs/
 logs/
+
+.vscode/
