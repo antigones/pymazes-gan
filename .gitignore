@@ -133,4 +133,4 @@ gan_training_checkpoints/
 imgs/
 logs/
 
-.vscode/
+.vscode
