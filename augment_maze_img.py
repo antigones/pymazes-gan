@@ -5,18 +5,17 @@ import maze_utils
 
 import numpy as np
 import random as rd
-import os
 
 def main():
   
-    n_samples = 1000
+    n_samples = 5000
     n=1
-    p=0.5
-    size=36
+    
+    size=12
     img_mode = 'RGB'
 
     for i in range((n_samples//3)*2):
-        
+        p = rd.uniform(0.3,0.8)
         grid = np.random.binomial(n,p, size=(size,size))
         grid = maze_utils.preprocess_grid(grid, size)
         output = maze_utils.carve_maze(grid, size)
@@ -24,7 +23,6 @@ def main():
         s = ""
         img_out = []
         for elm in output:
-            #s +=" ".join(elm)+"\n"
             s = "".join(elm)
             img_out.append(list(map(int,s.replace("#","1").replace(" ","0"))))
         arr = np.asarray(img_out)
@@ -33,10 +31,11 @@ def main():
         im = Image.fromarray(arr)
         if im.mode != img_mode:
             im = im.convert(img_mode)
-        imageio.imsave("imgs\\train_maze\\"+str(i)+".gif", im)
+        imageio.imsave("imgs\\train\\"+str(i)+".gif", im)
 
         
     for i in range(n_samples//3):
+        p= rd.uniform(0.3,0.8)
         grid = np.random.binomial(n,p, size=(size,size))
         grid = maze_utils.preprocess_grid(grid, size)
         output = maze_utils.carve_maze(grid, size)
@@ -52,7 +51,7 @@ def main():
         im = Image.fromarray(arr)
         if im.mode != img_mode:
             im = im.convert(img_mode)
-        imageio.imsave("imgs\\test_maze\\"+str(i)+".gif", im)
+        imageio.imsave("imgs\\test\\"+str(i)+".gif", im)
 
 if __name__ == '__main__':
     main()
