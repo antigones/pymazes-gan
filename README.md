@@ -20,6 +20,7 @@ Maze generation with GAN
 Comment the line:
 
 `train(train_dataset, EPOCHS)`
+
 `make_animation()`
 
 **Notes**
