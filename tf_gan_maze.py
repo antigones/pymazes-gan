@@ -216,9 +216,9 @@ log_path = './logs'
 # tensorboard --logdir logs
 
 
-# train(train_dataset, EPOCHS)
+train(train_dataset, EPOCHS)
 
-# make_animation()
+make_animation()
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
 # feed random image into generator
