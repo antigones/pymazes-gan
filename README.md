@@ -17,7 +17,7 @@ Maze generation with GAN
 
 **Loading weights without retraining**
 
-Comment the line:
+Comment the lines:
 
 `train(train_dataset, EPOCHS)`
 
