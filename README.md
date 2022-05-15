@@ -26,7 +26,11 @@ Comment the lines:
 **Notes**
 
 Maze size should match variational GAN layers architecture.
+
 In augment_maze_img.py:
+
 `size=12`
+
 In tf_gan_maze.py:
+
 `size = 12 * 3`
