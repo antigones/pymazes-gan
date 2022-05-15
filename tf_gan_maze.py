@@ -49,7 +49,7 @@ train_images = (train_images - 127.5) / 127.5  # Normalize the images to [-1, 1]
 
 EPOCHS = 200
 BUFFER_SIZE = 131
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 
 # Batch and shuffle the data
 train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
@@ -216,9 +216,9 @@ log_path = './logs'
 # tensorboard --logdir logs
 
 
-train(train_dataset, EPOCHS)
+# train(train_dataset, EPOCHS)
 
-make_animation()
+# make_animation()
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 
 # feed random image into generator
