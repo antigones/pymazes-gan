@@ -38,18 +38,12 @@ def plot_history(d1_hist, d2_hist, g_hist):
 	pyplot.plot(d2_hist, label='d-fake')
 	pyplot.plot(g_hist, label='gen')
 	pyplot.legend()
-	# plot discriminator accuracy
-	# pyplot.subplot(2, 1, 2)
-	# pyplot.plot(a1_hist, label='acc-real')
-	# pyplot.plot(a2_hist, label='acc-fake')
-	# pyplot.legend()
-	# save plot to file
 	pyplot.savefig('plot_line_plot_loss.png')
 	pyplot.close()
 
 size = 12 * 3
-# (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
-train_images = read_images("\\imgs\\train\\")
+
+train_images = read_images("/imgs/train/")
 train_images = train_images.reshape(train_images.shape[0], size, size, 1).astype('float32')
 train_images = (train_images - 127.5) / 127.5  # Normalize the images to [-1, 1]
 
@@ -117,12 +111,18 @@ decision = discriminator(generated_image)
 cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 def discriminator_loss(real_output, fake_output):
+    # how well the discriminator is able to distinguish real images from fakes
+    # fake_output: fake outputs, for the discriminator
+    # real_output: real outputs, for the discriminator
+    # real loss: real outputs for the discriminator vs real image (from training set)
+    # fake_loss: fake outputs for the discriminator vs generated images
     real_loss = cross_entropy(tf.ones_like(real_output), real_output)
     fake_loss = cross_entropy(tf.zeros_like(fake_output), fake_output)
     total_loss = real_loss + fake_loss
     return total_loss
 
 def generator_loss(fake_output):
+    # the ability of the generator to produce realistic images
     g_loss = cross_entropy(tf.ones_like(fake_output), fake_output)
     return g_loss
 
@@ -159,14 +159,6 @@ def train_step(images):
       gen_loss = generator_loss(fake_output)
       disc_loss = discriminator_loss(real_output, fake_output)
       total_loss = gen_loss + disc_loss
-    '''
-    with writer.as_default():
-      tf.summary.scalar('gen_loss', gen_loss, step=epoch)
-      tf.summary.scalar('disc_loss', disc_loss, step=epoch) 
-      tf.summary.scalar('total_loss', gen_loss+disc_loss, step=epoch)
-  
-    writer.flush()
-    '''
 
     gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
     gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
@@ -186,19 +178,9 @@ def generate_and_save_images(model, epoch, test_input):
     im = im.convert('L')
     imageio.imsave('./output_gan/image_at_epoch_{:04d}.png'.format(epoch), im)
 
-  #fig = plt.figure(figsize=(4, 4))
-
-  #for i in range(predictions.shape[0]):
-  #    plt.subplot(4, 4, i+1)
-  #    plt.imshow(predictions[i, :, :, 0] * 127.5 + 127.5, cmap='gray')
-  #    plt.axis('off')
-
-  #plt.savefig('./output_gan/image_at_epoch_{:04d}.png'.format(epoch))
-  #plt.show()
-
-
 
 def train(dataset, epochs):
+  writer = tf.summary.create_file_writer(log_path)
   for epoch in range(epochs):
     start = time.time()
 
@@ -231,10 +213,10 @@ def train(dataset, epochs):
 
 log_path = './logs'
 # create the file writer object
+# tensorboard --logdir logs
 
-# writer = tf.summary.create_file_writer(log_path)
 
-# train(train_dataset, EPOCHS)
+train(train_dataset, EPOCHS)
 
 make_animation()
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
@@ -243,9 +225,15 @@ checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
 noise = tf.random.normal([1, 100])
 generated_image = generator(noise, training=False)
 
-im = Image.fromarray(np.asarray(generated_image[0, :, :, 0] * 127.5 + 127.5))
-if im.mode != 'L':
-  im = im.convert('L')
+pred = np.asarray(generated_image[0, :, :, 0] * 127.5 + 127.5)
+print(pred)
+threshold = 240
+output = pred.copy()
+output[output>threshold] = 255
+output[output<=threshold] = 0
+im = Image.fromarray(output)
+if im.mode != 'RGB':
+  im = im.convert('RGB')
   imageio.imsave('./output_gan/generated.png', im)
 
 # Display a single image using the epoch number

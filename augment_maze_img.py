@@ -31,7 +31,7 @@ def main():
         im = Image.fromarray(arr)
         if im.mode != img_mode:
             im = im.convert(img_mode)
-        imageio.imsave("imgs\\train\\"+str(i)+".gif", im)
+        imageio.imsave("imgs/train/"+str(i)+".gif", im)
 
         
     for i in range(n_samples//3):
@@ -51,7 +51,7 @@ def main():
         im = Image.fromarray(arr)
         if im.mode != img_mode:
             im = im.convert(img_mode)
-        imageio.imsave("imgs\\test\\"+str(i)+".gif", im)
+        imageio.imsave("imgs/test/"+str(i)+".gif", im)
 
 if __name__ == '__main__':
     main()
